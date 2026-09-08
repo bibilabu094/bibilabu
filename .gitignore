@@ -1,0 +1,11 @@
+# Never commit API keys or personal client configuration.
+.env
+.env.*
+*.key
+auth.json
+settings.local.json
+
+# Editor and operating-system files.
+.DS_Store
+Thumbs.db
+.vscode/
