@@ -1,6 +1,6 @@
 # bibilabu API 接入指南
 
-这里是 bibilabu API 中转站的公开配置资料。它面向第一次配置 AI 编程工具的用户，按步骤说明文件放在哪里、要编辑什么、配置完成后怎样判断成功。
+这里是 bibilabu API 中转站的公开配置资料。内容按平台 Docs 的实际接入方式整理，面向第一次配置 AI 工具的用户，说明文件放在哪里、要编辑什么、配置完成后怎样判断成功。
 
 ## 先读这一段
 
@@ -14,15 +14,18 @@
 | --- | --- | --- | --- | --- |
 | Claude Code | [Claude Code 小白配置](docs/02-Claude-Code-配置.md) | `https://gate.bibilabu.cc`，末尾不要加 `/v1` | `/v1/messages` | 启动后在 Claude Code 中输入 `/model` |
 | Codex | [Codex 小白配置](docs/03-Codex-配置.md) | `https://gate.bibilabu.cc/v1`，必须带 `/v1` | `/v1/responses` | 启动后在 Codex 中输入 `/model` |
+| ChatBox、Cherry Studio、Cline、Roo Code、LangChain 或代码调用 | [OpenAI / Anthropic 兼容接入](docs/06-OpenAI与Anthropic兼容接入.md) | 按客户端协议选择根地址或带 `/v1` 的地址 | `/v1/chat/completions` 或 `/v1/messages` | 以 `/v1/models` 实时列表为准 |
+| CC Switch | [CC Switch 配置](docs/07-CC-Switch-配置.md) | `https://gate.bibilabu.cc`，末尾不要加 `/v1` | Anthropic 兼容配置 | 在 CC Switch 中填入可用模型 |
 
 Claude Code 和 Codex 的配置不能混用：目录不同、密钥保存方式不同、Base URL 写法也不同。
 
 ## 阅读顺序
 
 1. [开始前必读](docs/01-开始前必读.md)：准备 API 地址和 Key，了解哪些内容不能公开。
-2. 按你使用的工具完成 Claude Code 或 Codex 的配置。不要同时把两套配置粘贴到同一个文件。
-3. [接口与模型说明](docs/04-接口与模型.md)：理解 `/v1/models`、`/v1/messages`、`/v1/responses` 的用途。
-4. 出错时看 [常见问题](docs/05-常见问题.md)。
+2. 若要使用 Claude Code 或 Codex，先完成 [Node.js 与 npm 前置环境](docs/00-Node.js与npm前置环境.md)。只需安装一次，两个 CLI 共用。
+3. 按你使用的客户端完成对应教程。Claude Code、Codex 和 CC Switch 的配置不能混用。
+4. [接口与模型说明](docs/04-接口与模型.md)：理解 `/v1/models`、`/v1/messages`、`/v1/responses` 和 `/v1/chat/completions` 的用途。
+5. 出错时看 [常见问题](docs/05-常见问题.md)。
 
 ## 已验证范围
 

@@ -7,3 +7,9 @@
 - 明确 Claude Code 的 Base URL 不带 `/v1`，Codex 的 Base URL 必须带 `/v1`。
 - 明确 Codex 使用 `wire_api = "responses"`、`preferred_auth_method = "apikey"` 和 `auth.json` 读取密钥。
 - 明确所有 `https://gate.bibilabu.cc` 都只是作者当前使用的平台演示地址，读者必须替换为自己的平台地址和 Key。
+
+## 2026-09-09
+
+- 对照当前平台 Docs 补齐 Node.js LTS、npm 镜像、Claude Code 和 Codex 的安装步骤。
+- 将 Codex 的 `preferred_auth_method` 调整为与平台 Docs 一致的顶层配置，并补齐 `requires_openai_auth = true`。
+- 新增 OpenAI / Anthropic 兼容接入、Python、curl、常见客户端和 CC Switch 配置教程。
