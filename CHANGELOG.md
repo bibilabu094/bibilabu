@@ -1,5 +1,11 @@
 # 更新记录
 
+## 2026-09-09
+
+- Codex 自定义 Provider 改为当前 `env_key` 环境变量配置，移除 `auth.json`、`preferred_auth_method` 和 `discover_models`，并将 `requires_openai_auth` 修正为 `false`。
+- Claude Code 改为单一认证变量、`/v1/messages` 最小请求验证，并补充网关模型发现说明。
+- 新增 API 状态码排错页，同步修正接口说明与 FAQ。
+
 ## 2026-09-08
 
 - 创建公开接入资料仓库。

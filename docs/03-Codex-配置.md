@@ -1,12 +1,8 @@
 # Codex 小白配置
 
-本页按照平台 Docs 的 OpenAI Responses 兼容方式配置 Codex。Codex 走 `/v1/responses`，所以 `base_url` 必须以 `/v1` 结尾；密钥只放在 `auth.json`，不要写进 `config.toml`。
+本页用于把 Codex 接到 **OpenAI Responses 兼容** 的第三方 Provider。示例地址 `https://gate.bibilabu.cc/v1` 是作者当前使用的平台；使用其他平台时，必须替换成自己的 API 地址、Key 和模型名。
 
-示例使用 `https://gate.bibilabu.cc/v1`。其中域名是作者当前使用的平台演示地址；使用其他平台时，请替换成你自己的 API 地址和 Key。
-
-## 先完成 Node.js 前置环境
-
-若你还没有安装 Node.js 和 npm，先看 [Node.js 与 npm 前置环境](00-Node.js与npm前置环境.md)。完成后再按当前页面执行。
+Codex 使用 `/v1/responses`，因此 `base_url` 必须保留末尾 `/v1`。本页采用当前 Codex 的 `env_key` 方式读取 Key：Key 放在环境变量中，不创建 `auth.json`，也不把 Key 写进 `config.toml`。
 
 ## Windows 10/11
 
@@ -21,70 +17,56 @@ codex --version
 
 看到版本号说明安装成功。
 
-### 2. 创建配置目录和 `config.toml`
+### 2. 创建 `config.toml`
 
-在文件资源管理器地址栏输入下面路径并回车：
+在普通 PowerShell 中依次执行：
 
-```text
-%USERPROFILE%\.codex
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+New-Item -ItemType File -Force "$env:USERPROFILE\.codex\config.toml"
+notepad "$env:USERPROFILE\.codex\config.toml"
 ```
 
-若文件夹不存在，就在 `%USERPROFILE%` 下新建 `.codex` 文件夹。进入后新建文件 `config.toml`，并粘贴下面内容。若用其他平台，只替换 `base_url` 中的域名，**保留末尾 `/v1`**。
+粘贴下面配置。若使用其他平台，只替换 `base_url` 的域名，保留 `/v1`；`BIBILABU_API_KEY` 是环境变量名称，必须与下一步完全一致。
 
 ```toml
 model_provider = "bibilabu"
-# 不要固定 model；启动后用 /model 从实时列表选择。
 model_reasoning_effort = "medium"
-preferred_auth_method = "apikey"
 
 [model_providers.bibilabu]
 name = "bibilabu"
 base_url = "https://gate.bibilabu.cc/v1"
+env_key = "BIBILABU_API_KEY"
 wire_api = "responses"
-requires_openai_auth = true
-discover_models = true
+requires_openai_auth = false
 ```
 
-按 `Ctrl + S` 保存。`preferred_auth_method = "apikey"` 必须位于文件顶部，不能放进 `[model_providers.bibilabu]` 区块。
+按 `Ctrl + S` 保存。不要添加 `preferred_auth_method` 或 `discover_models`；第三方 Provider 的 `requires_openai_auth` 必须为 `false`。
 
-### 3. 创建密钥文件 `auth.json`
+### 3. 设置 Key 环境变量
 
-仍在 `%USERPROFILE%\.codex` 文件夹中，新建文件：
+仍在 PowerShell 中执行，并把 `YOUR_API_KEY` 替换成自己的 Key：
 
-```text
-auth.json
+```powershell
+[Environment]::SetEnvironmentVariable("BIBILABU_API_KEY", "YOUR_API_KEY", "User")
 ```
 
-打开后只粘贴下面 JSON，把 `YOUR_API_KEY` 替换为自己的 Key，再按 `Ctrl + S` 保存：
+关闭当前 PowerShell，再打开一个新的普通 PowerShell。新终端才会读取刚保存的用户环境变量。
 
-```json
-{
-  "OPENAI_API_KEY": "YOUR_API_KEY"
-}
-```
+### 4. 启动并验证
 
-注意文件名必须是 `auth.json`，不是 `auth.json.txt`。在文件资源管理器的“查看”中打开“文件扩展名”，可以确认文件名。
-
-### 4. 启动并选模型
-
-新开普通 PowerShell，进入代码项目目录，例如：
+进入代码项目目录并启动：
 
 ```powershell
 cd "C:\Users\你的用户名\Documents\我的项目"
 codex
 ```
 
-进入 Codex 后输入：
-
-```text
-/model
-```
-
-选择当前 Key 可用的 GPT 系列模型。也可以执行 `codex debug models` 查看 Codex 识别到的模型。
+发送一条普通消息。需要切换模型时再输入 `/model`，并只选择平台明确支持 Responses 的 GPT 系列模型。
 
 ## macOS 和 Linux
 
-打开终端，依次执行：
+打开终端，执行：
 
 ```bash
 npm install -g @openai/codex
@@ -93,59 +75,40 @@ mkdir -p ~/.codex
 nano ~/.codex/config.toml
 ```
 
-在 `~/.codex/config.toml` 中粘贴并保存：
-
-```toml
-model_provider = "bibilabu"
-# 不要固定 model；启动后用 /model 从实时列表选择。
-model_reasoning_effort = "medium"
-preferred_auth_method = "apikey"
-
-[model_providers.bibilabu]
-name = "bibilabu"
-base_url = "https://gate.bibilabu.cc/v1"
-wire_api = "responses"
-requires_openai_auth = true
-discover_models = true
-```
-
-在 nano 中按 `Ctrl + O` 保存、按回车确认、按 `Ctrl + X` 退出。接着执行：
+粘贴与 Windows 相同的 TOML，按 `Ctrl + O` 保存、回车确认、`Ctrl + X` 退出。随后在**启动 Codex 的同一个终端**设置 Key：
 
 ```bash
-nano ~/.codex/auth.json
+export BIBILABU_API_KEY="YOUR_API_KEY"
+cd ~/你的项目目录
+codex
 ```
 
-粘贴并保存：
+上述 `export` 仅对当前终端有效；关闭后需要再次设置，或按自己使用的 shell 安全地持久化环境变量。
 
-```json
-{
-  "OPENAI_API_KEY": "YOUR_API_KEY"
-}
-```
+## 这四项不要改错
 
-最后进入项目目录并运行 `codex`，在会话内输入 `/model` 选择 GPT 系列模型。
-
-## 这五项不要改错
-
-| 配置项 | 必须填写的值 | 写错会怎样 |
+| 配置项 | 必须填写的值 | 说明 |
 | --- | --- | --- |
-| `base_url` | 地址末尾必须是 `/v1` | 无法正确访问 Responses 路径 |
-| `wire_api` | `responses` | 新版 Codex 不接受 `openai` 或 `chat` |
-| `preferred_auth_method` | `apikey`，且位于文件顶部 | Codex 不会按 `auth.json` 的 API Key 方式认证 |
-| `requires_openai_auth` | `true` | 无法按 OpenAI API Key 方式接入 |
-| `discover_models` | `true` | 无法自动读取平台的可用模型列表 |
+| `base_url` | 地址末尾必须是 `/v1` | Codex 从此地址请求 Responses 接口 |
+| `env_key` | `BIBILABU_API_KEY` | 告诉 Codex 从哪个环境变量读取 Key |
+| `wire_api` | `responses` | 当前唯一支持的协议值，省略时也默认是它 |
+| `requires_openai_auth` | `false` | 使用第三方 Provider 的环境变量 Key，而非 OpenAI 身份认证 |
+| `BIBILABU_API_KEY` | 你的实际 Key | 必须在启动 Codex 的进程环境中存在 |
 
 ## 成功标准
 
 - `codex --version` 能显示版本。
-- `/model` 能显示模型列表。
-- 选择 GPT 系列模型后，普通请求能获得正常回复。
+- `config.toml` 没有 `auth.json`、`preferred_auth_method` 或 `discover_models`，且 `requires_openai_auth = false`。
+- 启动 Codex 的终端已经读取到 `BIBILABU_API_KEY`。
+- 选择受支持模型后，普通请求获得正常回复。
 
-## 限制和错误处理
+## 常见错误
 
-- 当前已验证 Codex 的 `/v1/responses` 路径用于 GPT 系列模型。不要在 Codex 中选择 Claude 模型。
-- 若提示 `unknown variant openai`，说明 `wire_api` 写成了旧值；改回 `responses`。
-- 若 401 或认证失败，检查 `%USERPROFILE%\.codex\auth.json` 是否为有效 JSON，且 `OPENAI_API_KEY` 已替换成你自己的 Key。
-- 若地址报错，检查 `base_url` 是否包含 `/v1`，以及域名是否为你自己的平台地址。
+| 现象 | 先检查什么 |
+| --- | --- |
+| `401` 或认证失败 | 新开的终端是否读取到 `BIBILABU_API_KEY`；环境变量名是否与 `env_key` 完全一致 |
+| `404` 或路径错误 | `base_url` 是否遗漏或重复了 `/v1` |
+| `unknown variant openai` | `wire_api` 被写成了旧值；改为 `responses` 或删除该行使用默认值 |
+| 找不到模型 | 先确认平台列出的模型是否支持 `/v1/responses`，不要把 Claude 模型用于 Codex Responses |
 
-其他问题见 [常见问题](05-常见问题.md)。
+其他 HTTP 状态码见 [API 报错排查](troubleshooting-api-errors.md)。

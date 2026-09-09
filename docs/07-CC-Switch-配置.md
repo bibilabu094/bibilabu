@@ -44,4 +44,4 @@ npm install -g @adithya-13/cc-switch
 | 认证失败 | Key 是否为你自己的有效 Key，且未复制额外空格 |
 | 404 或地址错误 | Base URL 末尾不能加 `/v1` |
 | 切换后 Claude Code 仍用旧配置 | 在 CC Switch 中确认已点击“启用”，然后完全退出并重启 Claude Code |
-| 模型不可用 | 使用当前 Key 在 `/v1/models` 或 Claude Code `/model` 中看到的模型名称 |
+| 模型不可用 | 先用实际 Messages 请求确认 Key 和模型兼容性；`/v1/models` 或 Claude Code `/model` 仅作辅助检查 |

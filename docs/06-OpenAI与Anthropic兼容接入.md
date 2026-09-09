@@ -10,10 +10,10 @@
 | --- | --- | --- | --- |
 | ChatBox、Cherry Studio、LangChain | OpenAI | `https://gate.bibilabu.cc/v1` | API Key |
 | Cline、Roo Code | OpenAI 或 Anthropic | OpenAI 用带 `/v1` 的地址；Anthropic 用不带 `/v1` 的根地址 | 依客户端表单填写 |
-| Claude Code | Anthropic | `https://gate.bibilabu.cc` | `ANTHROPIC_AUTH_TOKEN` |
-| Codex | OpenAI Responses | `https://gate.bibilabu.cc/v1` | `auth.json` 中的 `OPENAI_API_KEY` |
+| Claude Code | Anthropic | `https://gate.bibilabu.cc` | Bearer 网关用 `ANTHROPIC_AUTH_TOKEN`；`x-api-key` 网关用 `ANTHROPIC_API_KEY` |
+| Codex | OpenAI Responses | `https://gate.bibilabu.cc/v1` | `BIBILABU_API_KEY` 环境变量 |
 
-模型名称不要从示例中猜测。使用 `/v1/models` 返回的实时列表，或在客户端的模型菜单中选择。
+模型名称不要从示例中猜测。优先使用平台控制台给出的模型 ID；若平台实现 `/v1/models`，可将其作为辅助检查。
 
 ## OpenAI 格式
 
@@ -93,5 +93,5 @@ Anthropic 类型客户端使用服务根地址，因此末尾不要写 `/v1`。C
 ## 成功后怎样确认
 
 - API 返回正常 JSON，而不是 `401`、`404` 或 `429`。
-- `/v1/models` 或客户端模型菜单中能看到当前 Key 被授权的模型。
+- Claude Code 的 `/v1/messages` 最小请求或客户端实际消息能够成功返回。
 - 改用你的实际 API 地址和 Key 后仍然能请求成功。
